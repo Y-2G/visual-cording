@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <title>asobiba</title>
+    <link rel="stylesheet" type="text/css" href="../css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../css/header.css">
+    <style>
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.js"></script>
+
+</head>
+
+<body>
+
+<script>
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  background('333');
+  ps = new ParticleSystem();
+}
+
+function touchStarted() {
+  createParticles();
+}
+
+function touchMoved() {
+  createParticles();
+}
+
+function createParticles() {
+  for (let i = 0; i < 10; i++) {
+    const p = new Particle(mouseX, mouseY, 5, 1);
+    ps.addParticle(p);
+  }
+}
+
+function draw() {
+  background('#333');
+  ps.run();
+}
+
+class ParticleSystem {
+  constructor() {
+    this.particles = [];
+  }
+
+  addParticle(p) {
+    this.particles.push(p);
+  }
+
+  run() {
+    this.particles.forEach(particle => {
+      particle.run();
+    });
+  }
+}
+
+class Particle {
+  constructor(x, y, size, life) {
+    this.position = createVector(x, y);
+    this.velocity = createVector(random(-1, 1), random(-1, 1));
+    this.acceleration = createVector(random(-0.01, 0.01), random(-0.01, 0.01));
+    this.size = size;
+    this.life = life;
+  }
+
+  run() {
+    this.update();
+    this.display();
+  }
+  
+  update() {
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+    this.life -= 0.01;
+  }
+
+  display() {
+    if(this.life <= 0) return;
+
+    noFill();
+    stroke(`rgba(255, 255, 255, ${this.life})`);
+    ellipse(this.position.x, this.position.y, this.size);
+    // rect(0, 0, width, height);
+  }
+}
+
+</script>
+</body>
+</html>
